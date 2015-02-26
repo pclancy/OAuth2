@@ -81,7 +81,7 @@ namespace OAuth2.Client.Impl
         protected override UserInfo ParseUserInfo(string content)
         {
             var response = JObject.Parse(content);
-            const string avatarUriTemplate = "http://graph.facebook.com/{0}/picture?type={1}";
+            const string avatarUriTemplate = "https://graph.facebook.com/{0}/picture?type={1}";
             var avatarUri = response["picture"]["data"]["url"].Value<string>();
             var id = response["id"].Value<string>();
                 
