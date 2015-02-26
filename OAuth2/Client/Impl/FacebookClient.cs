@@ -81,19 +81,21 @@ namespace OAuth2.Client.Impl
         protected override UserInfo ParseUserInfo(string content)
         {
             var response = JObject.Parse(content);
-            const string avatarUriTemplate = "{0}?type={1}";
+            const string avatarUriTemplate = "http://graph.facebook.com/{0}/picture?type={1}";
             var avatarUri = response["picture"]["data"]["url"].Value<string>();
+            var id = response["id"].Value<string>();
+                
             return new UserInfo
             {
-                Id = response["id"].Value<string>(),
+                Id = id,
                 FirstName = response["first_name"].Value<string>(),
                 LastName = response["last_name"].Value<string>(),
                 Email = response["email"].SafeGet(x => x.Value<string>()),
                 AvatarUri =
                 {
-                    Small = !string.IsNullOrWhiteSpace(avatarUri) ? string.Format(avatarUriTemplate, avatarUri, "small") : string.Empty,
-                    Normal = !string.IsNullOrWhiteSpace(avatarUri) ? string.Format(avatarUriTemplate, avatarUri, "normal") : string.Empty,
-                    Large = !string.IsNullOrWhiteSpace(avatarUri) ? string.Format(avatarUriTemplate, avatarUri, "large") : string.Empty
+                    Small = string.Format(avatarUriTemplate, id, "small"),
+                    Normal = string.Format(avatarUriTemplate, id, "normal"),
+                    Large = string.Format(avatarUriTemplate, id, "large"),
                 }
             };
         }
